@@ -2,7 +2,7 @@
 
 ROS Script. Segments objects out of a rgbd camera image and recognizes them. 
 
-![screenshot]: ./screenshot.jpg
+![screenshot]: ./screenshot.png
 
 ## Methods used
 
