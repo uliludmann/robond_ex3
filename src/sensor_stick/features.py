@@ -10,7 +10,7 @@ def rgb_to_hsv(rgb_list):
     return hsv_normalized
 
 
-def compute_color_histograms(cloud, using_hsv=False, nbins = 32):
+def compute_color_histograms(cloud, using_hsv=False, nbins = 32, range=(0, 256)):
 
     # Compute histograms for the clusters
     point_colors_list = []
@@ -36,9 +36,9 @@ def compute_color_histograms(cloud, using_hsv=False, nbins = 32):
     # TODO: Compute histograms
     # convert from rgb to hsv 
 
-    a_hist = np.histogram(channel_1_vals, bins = nbins)
-    b_hist = np.histogram(channel_2_vals, bins = nbins)
-    c_hist = np.histogram(channel_3_vals, bins = nbins)
+    a_hist = np.histogram(channel_1_vals, bins = nbins, range = range)
+    b_hist = np.histogram(channel_2_vals, bins = nbins, range = range)
+    c_hist = np.histogram(channel_3_vals, bins = nbins, range = range)
 
     # TODO: Concatenate and normalize the histograms
     hist_features = np.concatenate((a_hist[0], b_hist[0], c_hist[0])).astype(np.float64)
@@ -47,7 +47,7 @@ def compute_color_histograms(cloud, using_hsv=False, nbins = 32):
     return normed_features 
 
 
-def compute_normal_histograms(normal_cloud, nbins = 32):
+def compute_normal_histograms(normal_cloud, nbins = 32, range = range):
     norm_x_vals = []
     norm_y_vals = []
     norm_z_vals = []
