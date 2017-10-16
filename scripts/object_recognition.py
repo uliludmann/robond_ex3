@@ -47,6 +47,8 @@ def pcl_callback(pcl_msg):
     axis_max = 1.1
     passthrough.set_filter_limits(axis_min, axis_max)
     cloud_filtered = passthrough.filter()
+    
+    pcl_passthrough_pub.publish(pcl_to_ros(cloud_filtered))
 
     # TODO: RANSAC Plane Segmentation
     seg = cloud_filtered.make_segmenter()
@@ -62,6 +64,12 @@ def pcl_callback(pcl_msg):
     cloud_table = extracted_inliers
     cloud_objects = extracted_outliers
 
+    #publish to ros
+
+    pcl_objects_pub.publish(pcl_to_ros(cloud_objects))
+    pcl_table_pub.publish(pcl_to_ros(cloud_table))
+
+
     # TODO: Euclidean Clustering
     white_cloud = XYZRGB_to_XYZ(cloud_objects)
     tree = white_cloud.make_kdtree()
@@ -71,10 +79,6 @@ def pcl_callback(pcl_msg):
     ec.set_MaxClusterSize(3500)
     ec.set_SearchMethod(tree)
     cluster_indices = ec.Extract()
-
-    # TODO: Create Cluster-Mask Point Cloud to visualize each cluster separately
-
-    # TODO: Convert PCL data to ROS messages
 
     # TODO: Publish ROS messages
     detected_objects_labels = []
@@ -132,10 +136,8 @@ if __name__ == '__main__':
     # TODO: Create Publishers
     pcl_objects_pub = rospy.Publisher("/pcl_objects", PointCloud2, queue_size=1)
     pcl_table_pub = rospy.Publisher("/pcl_table", PointCloud2, queue_size=1)
-    detected_objects_pub = rospy.Publisher("/detected_objects", DetectedObjectsArray, queue_size=1)
     object_markers_pub = rospy.Publisher("/object_markers", Marker, queue_size=1)
     pcl_passthrough_pub = rospy.Publisher("/pcl_passthrough", PointCloud2, queue_size=1)
-    recognized_object_pub = rospy.Publisher("/recognized_object", PointCloud2, queue_size=1)
     # TODO: Load Model From disk
     model_filename = 'model.sav'
     model = pickle.load(open(model_filename, 'rb'))

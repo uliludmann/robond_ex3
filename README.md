@@ -1,1 +1,12 @@
-sensor_stick
+# Udacity RoboND sensor_stick
+
+ROS Script. Segments objects out of a rgbd camera image and recognizes them. 
+
+![screenshot]: ./screenshot.jpg
+
+## Methods used
+
++ Passthrough filtering
++ RANSAC Plane Segmentation
++ Euclidean Clusteruing
++ SVM Algorithm to seperate objects (color histograms and normal histograms)
