@@ -90,11 +90,11 @@ def pcl_callback(pcl_msg):
         # Grab the points for the cluster
         pcl_cluster = cloud_objects.extract(pts_list)
 
-        pcl_cluster = pcl_to_ros(pcl_cluster)
+        ros_cluster = pcl_to_ros(pcl_cluster)
 
         # Compute the associated feature vector
-        chists = compute_color_histograms(pcl_cluster)
-        normals = get_normals(pcl_cluster)
+        chists = compute_color_histograms(ros_cluster, using_hsv = True)
+        normals = get_normals(ros_cluster)
         nhists = compute_normal_histograms(normals)
 
         feature = np.concatenate((chists, nhists))
