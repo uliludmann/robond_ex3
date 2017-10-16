@@ -10,7 +10,7 @@ def rgb_to_hsv(rgb_list):
     return hsv_normalized
 
 
-def compute_color_histograms(cloud, using_hsv=False):
+def compute_color_histograms(cloud, using_hsv=False, nbins = 32):
 
     # Compute histograms for the clusters
     point_colors_list = []
@@ -34,16 +34,20 @@ def compute_color_histograms(cloud, using_hsv=False):
         channel_3_vals.append(color[2])
     
     # TODO: Compute histograms
+    # convert from rgb to hsv 
+
+    a_hist = np.histogram(channel_1_vals, bins = nbins)
+    b_hist = np.histogram(channel_2_vals, bins = nbins)
+    c_hist = np.histogram(channel_3_vals, bins = nbins)
 
     # TODO: Concatenate and normalize the histograms
+    hist_features = np.concatenate((a_hist[0], b_hist[0], c_hist[0])).astype(np.float64)
+    normed_features = hist_features / np.sum(hist_features)
 
-    # Generate random features for demo mode.  
-    # Replace normed_features with your feature vector
-    normed_features = np.random.random(96) 
     return normed_features 
 
 
-def compute_normal_histograms(normal_cloud):
+def compute_normal_histograms(normal_cloud, nbins = 32):
     norm_x_vals = []
     norm_y_vals = []
     norm_z_vals = []
@@ -56,11 +60,36 @@ def compute_normal_histograms(normal_cloud):
         norm_z_vals.append(norm_component[2])
 
     # TODO: Compute histograms of normal values (just like with color)
+    a_hist = np.histogram(norm_x_vals, bins = nbins)
+    b_hist = np.histogram(norm_y_vals, bins = nbins)
+    c_hist = np.histogram(norm_z_vals, bins = nbins)
 
     # TODO: Concatenate and normalize the histograms
+    hist_color_features = np.concatenate((a_hist[0], b_hist[0], c_hist[0])).astype(np.float64)
+    normed_color_features = hist_features / np.sum(hist_features)
 
-    # Generate random features for demo mode.  
-    # Replace normed_features with your feature vector
-    normed_features = np.random.random(96)
+    return normed_color_features
 
-    return normed_features
+
+def compute_normal_histograms(normal_cloud, nbins = 32):
+    norm_x_vals = []
+    norm_y_vals = []
+    norm_z_vals = []
+
+    for norm_component in pc2.read_points(normal_cloud,
+                                          field_names = ('normal_x', 'normal_y', 'normal_z'),
+                                          skip_nans=True):
+        norm_x_vals.append(norm_component[0])
+        norm_y_vals.append(norm_component[1])
+        norm_z_vals.append(norm_component[2])
+
+    # TODO: Compute histograms of normal values (just like with color)
+    a_norm = np.histogram(norm_x_vals, bins = nbins)
+    b_norm = np.histogram(norm_y_vals, bins = nbins)
+    c_norm = np.histogram(norm_z_vals, bins = nbins)
+
+    # TODO: Concatenate and normalize the histograms
+    norm_features = np.concatenate((a_norm[0], b_norm[0], c_norm[0])).astype(np.float64)
+    normed_hist_features = norm_features / np.sum(norm_features)
+
+    return normed_hist_features
