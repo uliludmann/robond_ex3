@@ -1,4 +1,4 @@
-# Udacity RoboND Perception Excercise
+# Udacity RoboND Perception Exercise
 
 ROS Script. Segments objects out of a rgbd camera image and recognizes them. 
 
